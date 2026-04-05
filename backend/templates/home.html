@@ -1,0 +1,28 @@
+{%extends 'layout.html'%}
+{% load static %}
+
+{%block title%}
+    Home
+{%endblock%}
+
+{%block content%}
+    <section class="hero">
+        <span class="section-label" style="border-bottom-color: #ffffff; color: #ffffff;">The Manifesto</span>
+        <h1>RADICAL<br>SIMPLICITY.</h1>
+        <p>A digital space stripped of noise. We build, we write, we archive. Welcome to the source.</p>
+    </section>
+
+    <div class="grid-2">
+        <div class="content-block">
+            <span class="section-label">01 / The Vision</span>
+            <h2>PURE FUNCTION.</h2>
+            <p>In an age of distraction, we choose clarity. This platform is a testament to the power of minimalist architecture and focused content. No bloat. Just the message.</p>
+        </div>
+        <div class="content-block">
+            <span class="section-label">02 / Explorer</span>
+            <h2>ARCHIVE ACTIVE.</h2>
+            <p>Our thoughts are organized, tagged, and ready for consumption. Dive into the repository of ideas and discover what lies beneath the surface.</p>
+            <a href="{%url 'posts:list'%}" class="cta-link">View Archive</a>
+        </div>
+    </div>
+{%endblock%}

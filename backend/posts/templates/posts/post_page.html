@@ -1,0 +1,76 @@
+{%extends 'layout.html'%}
+{% load static %}
+
+{%block title%}
+    {{post.title}}
+
+{%endblock%}
+
+{%block content%}
+     <section>
+        <img 
+        class="banner"
+        src="{{post.banner.url}}"
+        alt="{{post.title}}">
+        <h1>{{post.title}}</h1> 
+        <p class="date">{{post.date}}</p>
+        <p class="body">{{post.body}}</p>
+        <div class="post-stats">
+            <!-- Like / Unlike Pill -->
+            <form class="stats-pill like-form" action="{% url 'posts:like' slug=post.slug %}" method="POST">
+                {% csrf_token %}    
+                <button type="submit" name="action" value="like" class="stat-btn" title="Like">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="{% if request.user in post.likes.all %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+                    <span class="stat-text">{{ post.likes.count }}</span> 
+                </button>
+                
+                <div class="divider"></div>
+                
+                <button type="submit" name="action" value="unlike" class="stat-btn" title="Dislike">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="{% if request.user in post.dislikes.all %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg>
+                </button>
+            </form>
+            
+            <!-- Views Pill -->
+            <div class="stats-pill eye-pill">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span class="stat-text">{{ post.views|default:0 }}</span>
+            </div>
+        </div>
+        {% if user == post.author %}
+            <a href="{% url 'posts:edit' slug=post.slug %}" class="edit-btn">Edit Post</a>
+            <a href="{% url 'posts:delete' slug=post.slug %}" class="delete-btn">Delete Post</a>
+        {% endif %}
+
+     </section>
+             <hr> <!-- Draws a separating line -->
+        
+        <section class="comments-section">
+            <h2>Comments</h2>
+            
+            <!-- 1. The Form to write a comment -->
+            {% if user.is_authenticated %}
+                <form action="{% url 'posts:page' slug=post.slug %}" method="POST">
+                    {% csrf_token %}
+                    {{ form }}
+                    <button type="submit">Add Comment</button>
+                </form>
+            {% else %}
+                <p><a href="{% url 'user:login' %}">Log in</a> to leave a comment.</p>
+            {% endif %}
+
+            <!-- 2. Loop through and read the comments -->
+            <!-- The related_name for this is typically post.comment_set.all -->
+            {% for comment in post.comment_set.all %}
+                <div class="comment">
+                    <p><strong>{{ comment.author.username }}</strong> <span class="date">- {{ comment.date|date:"F j, Y" }}</span></p>
+                    <p>{{ comment.body }}</p>
+                </div>
+            {% empty %}
+                <p>No comments yet. Be the first!</p>
+            {% endfor %}
+        </section>
+
+{%endblock%}
+
+

@@ -1,0 +1,26 @@
+
+{% extends 'layout.html' %}
+
+{% block content %}
+    <section class="profile-header">
+        <h1>{{ user.username }}</h1>
+        <p>Joined: {{ user.date_joined|date:"F Y" }}</p>
+    </section>
+
+    <section class="profile-posts">
+        <h2>Authored Posts</h2>
+        
+        {% if posts %}
+            <div class="posts-grid">
+                {% for post in posts %}
+                    <article class="post-card">
+                        <h3><a href="{% url 'posts:page' slug=post.slug %}">{{ post.title }}</a></h3>
+                        <p class="post-date">{{ post.date|date:"F j, Y" }}</p>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>You haven't posted anything yet.</p>
+        {% endif %}
+    </section>
+{% endblock %}

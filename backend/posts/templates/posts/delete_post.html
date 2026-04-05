@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <section>
+        <h1>Delete Post</h1>
+        <p>Are you 100% sure you want to delete the post: <strong>"{{ post.title }}"</strong>?</p>
+        <p>This cannot be undone.</p>
+        
+        <form action="{% url 'posts:delete' slug=post.slug %}" method="POST">
+            {% csrf_token %}
+            <!-- This posts to the View to trigger post.delete() -->
+            <button type="submit">Yes, Delete Post.</button>
+            <a href="{% url 'posts:page' slug=post.slug %}" class="delete-btn">Cancel</a>
+        </form>
+    </section>
+{% endblock %}
